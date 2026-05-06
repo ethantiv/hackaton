@@ -78,3 +78,55 @@ describe("POST /jobs/:id/photos", () => {
     expect(res.status).toBe(404);
   });
 });
+
+describe("GET /jobs/:id/photos", () => {
+  it("returns an empty array for a job with no photos", async () => {
+    const { app, db } = await buildApp();
+    const token = await loginAs(app, "marek@firma.pl");
+    const jobId = await getOwnJobId(app, db, "marek@firma.pl");
+
+    const res = await app.request(`/jobs/${jobId}/photos`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as unknown[];
+    expect(Array.isArray(body)).toBe(true);
+    expect(body.length).toBe(0);
+  });
+
+  it("lists photos uploaded to the job in chronological order", async () => {
+    const { app, db } = await buildApp();
+    const token = await loginAs(app, "marek@firma.pl");
+    const jobId = await getOwnJobId(app, db, "marek@firma.pl");
+
+    const upload = new FormData();
+    upload.append("file", new Blob([JPEG_MAGIC], { type: "image/jpeg" }), "p.jpg");
+    upload.append("description", "First");
+    const uploadRes = await app.request(`/jobs/${jobId}/photos`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      body: upload,
+    });
+    expect(uploadRes.status).toBe(201);
+
+    const res = await app.request(`/jobs/${jobId}/photos`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as Array<{ jobId: string; description: string }>;
+    expect(body.length).toBe(1);
+    expect(body[0].jobId).toBe(jobId);
+    expect(body[0].description).toBe("First");
+  });
+
+  it("returns 404 when listing photos for another technician's job", async () => {
+    const { app, db } = await buildApp();
+    const annaJob = await getOwnJobId(app, db, "anna@firma.pl");
+    const token = await loginAs(app, "marek@firma.pl");
+
+    const res = await app.request(`/jobs/${annaJob}/photos`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    expect(res.status).toBe(404);
+  });
+});
