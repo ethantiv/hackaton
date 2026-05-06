@@ -44,3 +44,10 @@ Required env vars in the Coolify UI:
 - [ ] `POST /jobs/<id>/start` → status flips to `in_progress`
 - [ ] `POST /jobs/<id>/photos` with a 1×1 JPEG → 201
 - [ ] Wrong password 5× → 423 on 6th attempt for that account
+
+## CI / CD
+
+`.github/workflows/backend.yml` posts to a Coolify deploy webhook on every push that touches `backend/**`.
+
+Required GitHub repository secret:
+- `COOLIFY_DEPLOY_WEBHOOK` — copy from Coolify UI → Application → Webhooks
