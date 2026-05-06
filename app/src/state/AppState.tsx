@@ -130,6 +130,8 @@ function reducer(state: State, action: Action): State {
   }
 }
 
+export type SyncState = "synced" | "queued" | "offline";
+
 export type AppApi = State & {
   setDemoState: (demo: DemoState) => void;
   navigate: (screen: Screen, jobId?: string | null) => void;
@@ -139,7 +141,7 @@ export type AppApi = State & {
   addPhoto: (jobId: string, description: string) => void;
   dismissBanner: () => void;
   acceptNewJob: () => void;
-  syncState: "synced" | "queued";
+  syncState: SyncState;
   queuedCount: number;
 };
 
@@ -184,7 +186,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     const isOffline = state.demoState === "offline";
     return {
       ...state,
-      syncState: isOffline ? "queued" : "synced",
+      syncState: isOffline ? "offline" : "synced",
       queuedCount: isOffline ? 2 : 0,
       setDemoState,
       navigate,

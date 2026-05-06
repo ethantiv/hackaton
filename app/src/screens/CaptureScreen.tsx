@@ -52,10 +52,11 @@ export function CaptureScreen({ job }: { job: Job }) {
             onPress={goBack}
             accessibilityRole="button"
             accessibilityLabel="Anuluj"
+            hitSlop={8}
             style={({ pressed }) => ({
-              width: 44,
-              height: 44,
-              borderRadius: 22,
+              width: 56,
+              height: 56,
+              borderRadius: 28,
               alignItems: "center",
               justifyContent: "center",
               backgroundColor: pressed
@@ -163,7 +164,7 @@ export function CaptureScreen({ job }: { job: Job }) {
                   <Icon
                     name="check"
                     size={36}
-                    color="#ffffff"
+                    color={tokens.colors["ink-on-signal"]}
                     strokeWidth={2.8}
                   />
                 </View>

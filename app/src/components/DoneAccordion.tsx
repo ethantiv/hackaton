@@ -22,7 +22,8 @@ export function DoneAccordion({ doneJobs, onJobPress }: Props) {
         accessibilityState={{ expanded: open }}
         style={({ pressed }) => ({
           paddingHorizontal: 20,
-          paddingVertical: 14,
+          paddingVertical: 18,
+          minHeight: 56,
           flexDirection: "row",
           alignItems: "center",
           gap: 10,
@@ -39,7 +40,12 @@ export function DoneAccordion({ doneJobs, onJobPress }: Props) {
             justifyContent: "center",
           }}
         >
-          <Icon name="check" size={14} color="#ffffff" strokeWidth={2.6} />
+          <Icon
+            name="check"
+            size={14}
+            color={tokens.colors["ink-on-signal"]}
+            strokeWidth={2.6}
+          />
         </View>
         <Text
           style={{

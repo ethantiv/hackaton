@@ -22,9 +22,16 @@ export function JobRow({ job, highlightNew, onPress }: Props) {
   const isUrgent = job.priority === "urgent" && job.status !== "done";
   const isDone = job.status === "done";
 
+  const a11yStatus = isUrgent ? "Pilne" : statusLabel[job.status];
+  const a11yAddress = job.unit ? `${job.address}, ${job.unit}` : job.address;
+  const a11yLabel = `${a11yAddress}. ${categoryLabel[job.category]}, ${job.scheduledWindow}. Status: ${a11yStatus}.${highlightNew ? " Nowe zlecenie." : ""}`;
+
   return (
     <Pressable
       onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={a11yLabel}
+      accessibilityHint="Otwiera szczegóły zlecenia"
       style={({ pressed }) => ({
         backgroundColor: pressed
           ? tokens.colors["mist-deep"]
@@ -152,7 +159,7 @@ export function JobRow({ job, highlightNew, onPress }: Props) {
               <Text
                 style={{
                   ...fontSans(700),
-                  color: "#ffffff",
+                  color: tokens.colors["ink-on-signal"],
                   fontSize: 11,
                   letterSpacing: 0.3,
                 }}

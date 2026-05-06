@@ -98,12 +98,17 @@ export function NewJobBanner({ visible, count = 1, onPress }: Props) {
             justifyContent: "center",
           }}
         >
-          <Icon name="plus" size={16} color="#ffffff" strokeWidth={2.4} />
+          <Icon
+            name="plus"
+            size={16}
+            color={tokens.colors["ink-on-signal"]}
+            strokeWidth={2.4}
+          />
         </View>
         <Text
           style={{
             ...fontSans(600),
-            color: "#ffffff",
+            color: tokens.colors["ink-on-signal"],
             fontSize: 15,
             flex: 1,
           }}
@@ -113,7 +118,7 @@ export function NewJobBanner({ visible, count = 1, onPress }: Props) {
         <Text
           style={{
             ...fontSans(500),
-            color: "rgba(255,255,255,0.78)",
+            color: "rgba(251,252,254,0.78)",
             fontSize: 13,
           }}
         >

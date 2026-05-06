@@ -8,7 +8,7 @@ export function PriorityTag({ compact = false }: { compact?: boolean }) {
     <View
       className="flex-row items-center"
       style={{
-        backgroundColor: tokens.colors["status-urgent-bg"],
+        backgroundColor: tokens.colors["status-urgent-soft"],
         paddingVertical: compact ? 2 : 4,
         paddingHorizontal: compact ? 6 : 8,
         borderRadius: 6,

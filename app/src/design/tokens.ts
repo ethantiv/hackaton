@@ -24,16 +24,30 @@ export const tokens = {
     "mist-deep": "#dfe2e8", // pressed / hover tint on mist
     border: "#c8ccd5", // oklch(85% 0.008 240) — dividers, hairlines
     "border-soft": "#dadde4", // very subtle dividers
-    muted: "#6b7280", // secondary text, neutral status
+    // Secondary text — darkened from #6b7280 so it clears WCAG AA on `mist`
+    // (≥4.5:1) and AAA on `cream` (≥7:1). Anchor: oklch(40% 0.02 240).
+    muted: "#4a5260",
     body: "#2c3138", // oklch(25% 0.015 240) — body text
     title: "#1a1f26", // oklch(18% 0.02 240) — titles, headers
 
+    // White on signal-blue surfaces — slight blue tint preserves the
+    // Same-Light Rule (every neutral carries a trace of the accent hue).
+    "ink-on-signal": "#fbfcfe",
+
     // Status palette — color is never the only signal; pair with icon + label.
-    "status-pending": "#6b7280", // neutral, "zaplanowane"
+    // Foreground hues meet WCAG AA on both `cream` and the matching `*-soft`
+    // wash listed below.
+    "status-pending": "#4a5260", // neutral, "zaplanowane"
     "status-progress": "#1262c4", // signal blue, "w trakcie"
-    "status-done": "#2f7a4d", // oklch(50% 0.10 145) — muted forest green
-    "status-urgent": "#b8861a", // oklch(62% 0.16 70) — deep amber, "pilne"
-    "status-urgent-bg": "#fdf3dc", // amber wash background for urgent rows
+    "status-done": "#216b3e", // oklch(45% 0.10 145) — darker forest green
+    "status-urgent": "#7a570b", // oklch(45% 0.14 70) — deep amber, "pilne"
+
+    // Soft status washes — every wash is hue-aligned (chroma 0.02–0.04 on the
+    // matching status hue). Replace ad-hoc hexes inside StatusBadge.
+    "status-pending-soft": "#e5e7eb",
+    "status-progress-soft": "#dbe7f6",
+    "status-done-soft": "#d8ecdf",
+    "status-urgent-soft": "#fdf3dc",
 
     // White/black — never used directly; expose for explicit override only.
     "pure-white": "#ffffff",

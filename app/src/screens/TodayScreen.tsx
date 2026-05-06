@@ -239,7 +239,12 @@ function AllDoneSummary({ count }: { count: number }) {
           marginBottom: 16,
         }}
       >
-        <Icon name="check" size={26} color="#ffffff" strokeWidth={2.8} />
+        <Icon
+          name="check"
+          size={26}
+          color={tokens.colors["ink-on-signal"]}
+          strokeWidth={2.8}
+        />
       </View>
       <Text
         style={{

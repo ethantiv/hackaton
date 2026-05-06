@@ -32,16 +32,25 @@ export function StatusDot({ status, priority, size = 32 }: Props) {
       }}
     >
       {status === "done" && (
-        <Icon name="check" size={dotSize * 0.55} color="#ffffff" strokeWidth={2.5} />
+        <Icon
+          name="check"
+          size={dotSize * 0.55}
+          color={tokens.colors["ink-on-signal"]}
+          strokeWidth={2.5}
+        />
       )}
       {status === "in_progress" && (
-        <Icon name="play" size={dotSize * 0.45} color="#ffffff" />
+        <Icon
+          name="play"
+          size={dotSize * 0.45}
+          color={tokens.colors["ink-on-signal"]}
+        />
       )}
       {status === "pending" && isUrgent && (
         <Icon
           name="alert-triangle"
           size={dotSize * 0.55}
-          color="#ffffff"
+          color={tokens.colors["ink-on-signal"]}
           strokeWidth={2.5}
         />
       )}

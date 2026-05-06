@@ -39,22 +39,29 @@ export function DemoToggle({
           <Pressable
             key={s}
             onPress={() => onChange(s)}
+            accessibilityRole="button"
+            accessibilityState={{ selected: active }}
+            accessibilityLabel={labels[s]}
+            hitSlop={4}
             style={({ pressed }) => ({
               flex: 1,
-              paddingVertical: 8,
+              minHeight: 48,
+              paddingVertical: 12,
+              paddingHorizontal: 6,
               borderRadius: 9,
               backgroundColor: active
                 ? tokens.colors.cream
                 : pressed
-                  ? "rgba(255,255,255,0.4)"
+                  ? "rgba(246,247,249,0.5)"
                   : "transparent",
               alignItems: "center",
+              justifyContent: "center",
             })}
           >
             <Text
               style={{
                 ...fontSans(active ? 700 : 500),
-                color: active ? tokens.colors.title : tokens.colors.muted,
+                color: active ? tokens.colors.title : tokens.colors.body,
                 fontSize: 12,
                 letterSpacing: 0.1,
               }}

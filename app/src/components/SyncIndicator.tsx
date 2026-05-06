@@ -56,15 +56,16 @@ export function SyncIndicator({ state, queuedCount = 0 }: Props) {
 
   return (
     <View className="flex-row items-center" style={{ gap: 6 }}>
-      <Icon name="cloud-off" size={14} color={tokens.colors.muted} />
+      <Icon name="cloud-off" size={14} color={tokens.colors.body} />
       <Text
         style={{
-          ...fontSans(500),
-          color: tokens.colors.muted,
+          ...fontSans(600),
+          color: tokens.colors.body,
           fontSize: 13,
         }}
       >
-        Tryb offline
+        Offline
+        {queuedCount > 0 ? ` · ${queuedCount} w kolejce` : ""}
       </Text>
     </View>
   );

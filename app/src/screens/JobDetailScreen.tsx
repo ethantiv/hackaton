@@ -97,8 +97,6 @@ function HeroBlock({ job }: { job: Job }) {
         backgroundColor: tokens.colors.mist,
         borderRadius: 20,
         padding: 24,
-        borderWidth: 1,
-        borderColor: tokens.colors["border-soft"],
       }}
     >
       <View
@@ -109,7 +107,7 @@ function HeroBlock({ job }: { job: Job }) {
             width: 28,
             height: 28,
             borderRadius: 14,
-            backgroundColor: tokens.colors.signal.DEFAULT,
+            backgroundColor: tokens.colors["mist-deep"],
             alignItems: "center",
             justifyContent: "center",
           }}
@@ -117,7 +115,7 @@ function HeroBlock({ job }: { job: Job }) {
           <Icon
             name={categoryIcon[job.category]}
             size={15}
-            color="#ffffff"
+            color={tokens.colors.body}
             strokeWidth={2.2}
           />
         </View>
@@ -189,59 +187,63 @@ function MetaBlock({ job }: { job: Job }) {
     <View
       style={{
         marginHorizontal: 16,
-        marginTop: 24,
-        backgroundColor: tokens.colors.mist,
-        borderRadius: 16,
-        padding: 16,
-        gap: 14,
-        borderWidth: 1,
-        borderColor: tokens.colors["border-soft"],
+        marginTop: 28,
+        paddingTop: 16,
+        borderTopWidth: 1,
+        borderTopColor: tokens.colors["border-soft"],
       }}
     >
-      <MetaRow
-        iconName="clock"
-        label="Okno czasowe"
-        value={job.scheduledWindow}
-        mono
-      />
-      {job.travelTimeMin !== undefined && (
+      <SectionLabel>Realizacja</SectionLabel>
+      <View style={{ marginTop: 12, gap: 0 }}>
         <MetaRow
-          iconName="map-pin"
-          label="Dojazd"
-          value={`~ ${job.travelTimeMin} min jazdy`}
+          iconName="clock"
+          label="Okno czasowe"
+          value={job.scheduledWindow}
+          mono
+          first
         />
-      )}
-      <MetaRow
-        iconName="refresh-cw"
-        label="Czas pracy"
-        value={`~ ${job.estimatedDurationMin} min`}
-      />
+        {job.travelTimeMin !== undefined && (
+          <MetaRow
+            iconName="map-pin"
+            label="Dojazd"
+            value={`~ ${job.travelTimeMin} min jazdy`}
+          />
+        )}
+        <MetaRow
+          iconName="refresh-cw"
+          label="Czas pracy"
+          value={`~ ${job.estimatedDurationMin} min`}
+        />
+      </View>
     </View>
   );
 }
 
 function ContactBlock({ job }: { job: Job }) {
   return (
-    <View style={{ marginHorizontal: 16, marginTop: 16 }}>
+    <View
+      style={{
+        marginHorizontal: 16,
+        marginTop: 28,
+        paddingTop: 16,
+        borderTopWidth: 1,
+        borderTopColor: tokens.colors["border-soft"],
+      }}
+    >
       <SectionLabel>Kontakt na miejscu</SectionLabel>
       <View
         style={{
-          marginTop: 8,
-          backgroundColor: tokens.colors.mist,
-          borderRadius: 16,
-          padding: 16,
+          marginTop: 12,
           flexDirection: "row",
           alignItems: "center",
           gap: 14,
-          borderWidth: 1,
-          borderColor: tokens.colors["border-soft"],
         }}
       >
         <View
           style={{
-            width: 44,
-            height: 44,
-            borderRadius: 22,
+            width: 48,
+            height: 48,
+            borderRadius: 24,
             backgroundColor: tokens.colors["mist-deep"],
             alignItems: "center",
             justifyContent: "center",
@@ -251,7 +253,7 @@ function ContactBlock({ job }: { job: Job }) {
             style={{
               ...fontSans(700),
               color: tokens.colors.body,
-              fontSize: 16,
+              fontSize: 18,
             }}
           >
             {(job.contactName ?? "").slice(0, 1).toUpperCase()}
@@ -289,10 +291,11 @@ function ContactBlock({ job }: { job: Job }) {
             }
             accessibilityRole="button"
             accessibilityLabel={`Zadzwoń do ${job.contactName}`}
+            hitSlop={8}
             style={({ pressed }) => ({
-              width: 48,
-              height: 48,
-              borderRadius: 24,
+              width: 64,
+              height: 64,
+              borderRadius: 32,
               backgroundColor: pressed
                 ? tokens.colors.signal.dark
                 : tokens.colors.signal.DEFAULT,
@@ -300,7 +303,12 @@ function ContactBlock({ job }: { job: Job }) {
               justifyContent: "center",
             })}
           >
-            <Icon name="phone" size={20} color="#ffffff" strokeWidth={2.2} />
+            <Icon
+              name="phone"
+              size={24}
+              color={tokens.colors["ink-on-signal"]}
+              strokeWidth={2.2}
+            />
           </Pressable>
         )}
       </View>
@@ -318,7 +326,7 @@ function Timeline({ job, photoCount }: { job: Job; photoCount: number }) {
         job.status === "pending"
           ? "Czeka na rozpoczęcie"
           : job.status === "done"
-            ? `Zakończone — ${photoCount} ${photoCount === 1 ? "zdjęcie" : "zdjęć"}`
+            ? `Zakończone, ${photoCount} ${photoCount === 1 ? "zdjęcie" : "zdjęć"}`
             : "W trakcie",
     },
     {
@@ -327,85 +335,111 @@ function Timeline({ job, photoCount }: { job: Job; photoCount: number }) {
       subtitle:
         job.status === "done"
           ? "Zatwierdzone w aplikacji"
-          : "Wymaga zdjęcia + opisu",
+          : "Wymaga zdjęcia i opisu",
     },
   ];
 
   return (
-    <View style={{ marginHorizontal: 16, marginTop: 24 }}>
+    <View
+      style={{
+        marginHorizontal: 16,
+        marginTop: 28,
+        paddingTop: 16,
+        borderTopWidth: 1,
+        borderTopColor: tokens.colors["border-soft"],
+      }}
+    >
       <SectionLabel>Postęp</SectionLabel>
-      <View
-        style={{
-          marginTop: 8,
-          backgroundColor: tokens.colors.mist,
-          borderRadius: 16,
-          padding: 16,
-          gap: 12,
-          borderWidth: 1,
-          borderColor: tokens.colors["border-soft"],
-        }}
-      >
-        {steps.map((s, idx) => (
-          <View
-            key={s.label}
-            style={{ flexDirection: "row", alignItems: "flex-start", gap: 12 }}
-          >
+      <View style={{ marginTop: 14, position: "relative" }}>
+        <View
+          pointerEvents="none"
+          style={{
+            position: "absolute",
+            left: 10,
+            top: 12,
+            bottom: 12,
+            width: 2,
+            backgroundColor: tokens.colors["border-soft"],
+          }}
+        />
+        {steps.map((s, idx) => {
+          const isCurrent = idx === 1 && job.status === "in_progress";
+          return (
             <View
+              key={s.label}
               style={{
-                width: 22,
-                height: 22,
-                borderRadius: 11,
-                backgroundColor: s.done
-                  ? tokens.colors["status-done"]
-                  : tokens.colors["mist-deep"],
-                alignItems: "center",
-                justifyContent: "center",
-                marginTop: 1,
+                flexDirection: "row",
+                alignItems: "flex-start",
+                gap: 14,
+                marginBottom: idx === steps.length - 1 ? 0 : 14,
               }}
             >
-              {s.done && (
-                <Icon name="check" size={12} color="#ffffff" strokeWidth={2.6} />
-              )}
-              {!s.done && idx === 1 && job.status === "in_progress" && (
-                <View
-                  style={{
-                    width: 8,
-                    height: 8,
-                    borderRadius: 4,
-                    backgroundColor: tokens.colors.signal.DEFAULT,
-                  }}
-                />
-              )}
-            </View>
-            <View style={{ flex: 1 }}>
-              <Text
+              <View
                 style={{
-                  ...fontSans(600),
-                  color: s.done
-                    ? tokens.colors.title
-                    : idx === 1 && job.status === "in_progress"
-                      ? tokens.colors.signal.dark
-                      : tokens.colors.muted,
-                  fontSize: 15,
+                  width: 22,
+                  height: 22,
+                  borderRadius: 11,
+                  backgroundColor: s.done
+                    ? tokens.colors["status-done"]
+                    : isCurrent
+                      ? tokens.colors.signal.DEFAULT
+                      : tokens.colors.cream,
+                  borderWidth: s.done || isCurrent ? 0 : 2,
+                  borderColor: tokens.colors.border,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginTop: 1,
                 }}
               >
-                {s.label}
-              </Text>
-              {s.subtitle && (
+                {s.done && (
+                  <Icon
+                    name="check"
+                    size={12}
+                    color={tokens.colors["ink-on-signal"]}
+                    strokeWidth={2.6}
+                  />
+                )}
+                {!s.done && isCurrent && (
+                  <View
+                    style={{
+                      width: 8,
+                      height: 8,
+                      borderRadius: 4,
+                      backgroundColor: tokens.colors["ink-on-signal"],
+                    }}
+                  />
+                )}
+              </View>
+              <View style={{ flex: 1, paddingTop: 1 }}>
                 <Text
                   style={{
-                    ...fontSans(500),
-                    color: tokens.colors.muted,
-                    fontSize: 13,
-                    marginTop: 2,
+                    ...fontSans(600),
+                    color: s.done
+                      ? tokens.colors.title
+                      : isCurrent
+                        ? tokens.colors.signal.dark
+                        : tokens.colors.muted,
+                    fontSize: 15,
                   }}
                 >
-                  {s.subtitle}
+                  {s.label}
                 </Text>
-              )}
+                {s.subtitle && (
+                  <Text
+                    style={{
+                      ...fontSans(500),
+                      color: tokens.colors.muted,
+                      fontSize: 13,
+                      marginTop: 2,
+                    }}
+                  >
+                    {s.subtitle}
+                  </Text>
+                )}
+              </View>
             </View>
-          </View>
-        ))}
+          );
+        })}
       </View>
     </View>
   );
@@ -421,7 +455,15 @@ function PhotosBlock({
   onAdd: () => void;
 }) {
   return (
-    <View style={{ marginHorizontal: 16, marginTop: 24 }}>
+    <View
+      style={{
+        marginHorizontal: 16,
+        marginTop: 28,
+        paddingTop: 16,
+        borderTopWidth: 1,
+        borderTopColor: tokens.colors["border-soft"],
+      }}
+    >
       <View
         style={{
           flexDirection: "row",
@@ -433,23 +475,27 @@ function PhotosBlock({
         {canAdd && (
           <Pressable
             onPress={onAdd}
+            accessibilityRole="button"
+            accessibilityLabel="Dodaj zdjęcie"
+            hitSlop={8}
             style={({ pressed }) => ({
               flexDirection: "row",
               alignItems: "center",
               gap: 4,
+              paddingVertical: 4,
               opacity: pressed ? 0.6 : 1,
             })}
           >
             <Icon
               name="plus"
               size={14}
-              color={tokens.colors.signal.DEFAULT}
+              color={tokens.colors.title}
               strokeWidth={2.4}
             />
             <Text
               style={{
                 ...fontSans(600),
-                color: tokens.colors.signal.DEFAULT,
+                color: tokens.colors.title,
                 fontSize: 14,
               }}
             >
@@ -459,49 +505,33 @@ function PhotosBlock({
         )}
       </View>
       {photos.length === 0 ? (
-        <View
+        <Text
           style={{
-            marginTop: 8,
-            backgroundColor: tokens.colors.mist,
-            borderRadius: 16,
-            paddingVertical: 22,
-            paddingHorizontal: 16,
-            borderWidth: 1,
-            borderColor: tokens.colors["border-soft"],
-            alignItems: "center",
+            ...fontSans(500),
+            color: tokens.colors.muted,
+            fontSize: 14,
+            lineHeight: 20,
+            marginTop: 12,
           }}
         >
-          <Text
-            style={{
-              ...fontSans(500),
-              color: tokens.colors.muted,
-              fontSize: 14,
-              textAlign: "center",
-            }}
-          >
-            Brak zdjęć. Dodaj proof-of-work zanim zakończysz zlecenie.
-          </Text>
-        </View>
+          Brak zdjęć. Dodaj dowód wykonanej pracy zanim zakończysz zlecenie.
+        </Text>
       ) : (
-        <View style={{ marginTop: 8, gap: 10 }}>
+        <View style={{ marginTop: 12, gap: 8 }}>
           {photos.map((p) => (
             <View
               key={p.id}
               style={{
-                backgroundColor: tokens.colors.mist,
-                borderRadius: 14,
-                padding: 12,
                 flexDirection: "row",
                 gap: 12,
                 alignItems: "center",
-                borderWidth: 1,
-                borderColor: tokens.colors["border-soft"],
+                paddingVertical: 8,
               }}
             >
               <View
                 style={{
-                  width: 56,
-                  height: 56,
+                  width: 48,
+                  height: 48,
                   borderRadius: 10,
                   backgroundColor: tokens.colors["mist-deep"],
                   alignItems: "center",
@@ -549,20 +579,31 @@ function MetaRow({
   label,
   value,
   mono,
+  first,
 }: {
   iconName: "clock" | "map-pin" | "refresh-cw";
   label: string;
   value: string;
   mono?: boolean;
+  first?: boolean;
 }) {
   return (
-    <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
+    <View
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 12,
+        paddingVertical: 12,
+        borderTopWidth: first ? 0 : 1,
+        borderTopColor: tokens.colors["border-soft"],
+      }}
+    >
       <View
         style={{
           width: 32,
           height: 32,
           borderRadius: 8,
-          backgroundColor: tokens.colors["mist-deep"],
+          backgroundColor: tokens.colors.mist,
           alignItems: "center",
           justifyContent: "center",
         }}
@@ -579,7 +620,9 @@ function MetaRow({
           ...fontSans(500),
           color: tokens.colors.muted,
           fontSize: 13,
-          width: 96,
+          minWidth: 88,
+          maxWidth: 132,
+          flexShrink: 0,
         }}
       >
         {label}
@@ -590,6 +633,7 @@ function MetaRow({
           color: tokens.colors.title,
           fontSize: 15,
           flex: 1,
+          flexShrink: 1,
         }}
       >
         {value}

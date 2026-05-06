@@ -43,15 +43,15 @@ export function SpotlightCard({ job, spotlightLabel, showOfflineNote }: Props) {
               width: 24,
               height: 24,
               borderRadius: 12,
-              backgroundColor: tokens.colors.signal.DEFAULT,
+              backgroundColor: tokens.colors["mist-deep"],
               alignItems: "center",
               justifyContent: "center",
             }}
           >
             <Icon
               name={categoryIcon[job.category]}
-              size={14}
-              color="#ffffff"
+              size={13}
+              color={tokens.colors.body}
               strokeWidth={2.2}
             />
           </View>
@@ -175,7 +175,7 @@ export function SpotlightCard({ job, spotlightLabel, showOfflineNote }: Props) {
               lineHeight: 18,
             }}
           >
-            Tryb offline — zmiany zapiszą się gdy wróci sieć.
+            Tryb offline. Zmiany zapiszą się gdy wróci sieć.
           </Text>
         </View>
       )}

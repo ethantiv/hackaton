@@ -7,17 +7,17 @@ import type { Job } from "../data/mockJobs";
 const meta = {
   pending: {
     label: "Zaplanowane",
-    bg: "#e5e7eb",
+    bg: tokens.colors["status-pending-soft"],
     fg: tokens.colors.body,
   },
   in_progress: {
     label: "W trakcie",
-    bg: "#dbe7f6",
+    bg: tokens.colors["status-progress-soft"],
     fg: tokens.colors.signal.dark,
   },
   done: {
     label: "Ukończone",
-    bg: "#dcefe2",
+    bg: tokens.colors["status-done-soft"],
     fg: tokens.colors["status-done"],
   },
 } as const;
@@ -31,7 +31,7 @@ export function StatusBadge({
 }) {
   const m = meta[status];
   const isUrgent = priority === "urgent" && status !== "done";
-  const bg = isUrgent ? tokens.colors["status-urgent-bg"] : m.bg;
+  const bg = isUrgent ? tokens.colors["status-urgent-soft"] : m.bg;
   const fg = isUrgent ? tokens.colors["status-urgent"] : m.fg;
   return (
     <View

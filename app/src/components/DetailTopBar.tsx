@@ -26,10 +26,11 @@ export function DetailTopBar({ ticketId, onBack, rightSlot }: Props) {
         onPress={onBack}
         accessibilityRole="button"
         accessibilityLabel="Wróć"
+        hitSlop={8}
         style={({ pressed }) => ({
-          width: 44,
-          height: 44,
-          borderRadius: 22,
+          width: 56,
+          height: 56,
+          borderRadius: 28,
           alignItems: "center",
           justifyContent: "center",
           backgroundColor: pressed ? tokens.colors["mist-deep"] : "transparent",

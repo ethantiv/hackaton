@@ -49,13 +49,13 @@ export function BottomCTA({
         <Icon
           name={iconName}
           size={20}
-          color={isPrimary ? "#ffffff" : tokens.colors.title}
+          color={isPrimary ? tokens.colors["ink-on-signal"] : tokens.colors.title}
           strokeWidth={2.4}
         />
         <Text
           style={{
             ...fontSans(700),
-            color: isPrimary ? "#ffffff" : tokens.colors.title,
+            color: isPrimary ? tokens.colors["ink-on-signal"] : tokens.colors.title,
             fontSize: 18,
             letterSpacing: -0.1,
           }}
