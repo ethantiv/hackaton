@@ -45,9 +45,6 @@ Required env vars in the Coolify UI:
 - [ ] `POST /jobs/<id>/photos` with a 1×1 JPEG → 201
 - [ ] Wrong password 5× → 423 on 6th attempt for that account
 
-## CI / CD
+## Deployments
 
-`.github/workflows/backend.yml` posts to a Coolify deploy webhook on every push that touches `backend/**`.
-
-Required GitHub repository secret:
-- `COOLIFY_DEPLOY_WEBHOOK` — copy from Coolify UI → Application → Webhooks
+Trigger redeploys manually from the Coolify dashboard (project `mirek-rpi` → `field-notebook-backend` → Deploy). The Coolify GitHub App is installed but its push-driven auto-deploy is currently bypassed; no GitHub Actions workflow is involved.
