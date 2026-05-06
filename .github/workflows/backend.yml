@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'backend/**'
+      - 'docker-compose.yml'
       - '.github/workflows/backend.yml'
   workflow_dispatch:
 
@@ -17,7 +18,7 @@ jobs:
           WEBHOOK: ${{ secrets.COOLIFY_DEPLOY_WEBHOOK }}
         run: |
           if [ -z "$WEBHOOK" ]; then
-            echo "COOLIFY_DEPLOY_WEBHOOK secret not set" >&2
-            exit 1
+            echo "COOLIFY_DEPLOY_WEBHOOK secret not set; relying on Coolify GitHub App auto-deploy."
+            exit 0
           fi
           curl -fsSL -X POST "$WEBHOOK"
