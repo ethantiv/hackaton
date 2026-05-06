@@ -9,7 +9,7 @@ services:
     volumes:
       - 'field-notebook-data:/data'
     environment:
-      - 'SERVICE_FQDN_BACKEND_3000=/'
+      - 'SERVICE_FQDN_BACKEND_3000=https://field-notebook.zaniewicz.dev'
       - 'JWT_SECRET=${SERVICE_BASE64_64_JWT}'
       - 'DATABASE_PATH=/data/app.db'
       - 'PHOTOS_PATH=/data/photos'
