@@ -11,7 +11,7 @@ on:
 
 env:
   COOLIFY_BASE: https://coolify.mirek-rpi.org
-  COOLIFY_APP_UUID: eql38a7vbd05at2d0brb7ngz
+  COOLIFY_APP_UUID: c1x0tbz4cg7gdx3ftltz699v
 
 jobs:
   trigger-deploy:
