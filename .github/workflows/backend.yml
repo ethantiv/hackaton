@@ -5,20 +5,26 @@ on:
     branches: [main]
     paths:
       - 'backend/**'
-      - 'docker-compose.yml'
+      - 'docker-compose.yaml'
       - '.github/workflows/backend.yml'
   workflow_dispatch:
+
+env:
+  COOLIFY_BASE: https://coolify.mirek-rpi.org
+  COOLIFY_APP_UUID: eql38a7vbd05at2d0brb7ngz
 
 jobs:
   trigger-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger Coolify webhook
+      - name: Trigger Coolify deploy
         env:
-          WEBHOOK: ${{ secrets.COOLIFY_DEPLOY_WEBHOOK }}
+          TOKEN: ${{ secrets.COOLIFY_API_TOKEN }}
         run: |
-          if [ -z "$WEBHOOK" ]; then
-            echo "COOLIFY_DEPLOY_WEBHOOK secret not set; relying on Coolify GitHub App auto-deploy."
+          if [ -z "$TOKEN" ]; then
+            echo "COOLIFY_API_TOKEN secret not set; relying on Coolify GitHub App auto-deploy."
             exit 0
           fi
-          curl -fsSL -X POST "$WEBHOOK"
+          curl -fsSL -X POST \
+            -H "Authorization: Bearer $TOKEN" \
+            "$COOLIFY_BASE/api/v1/deploy?uuid=$COOLIFY_APP_UUID&force=false"
