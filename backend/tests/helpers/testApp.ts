@@ -5,6 +5,7 @@ import { setDbForTests } from "../../src/db/client";
 import { seed } from "../../src/db/seed";
 import { health } from "../../src/routes/health";
 import { auth } from "../../src/routes/auth";
+import { me } from "../../src/routes/me";
 
 export async function buildApp() {
   const db = new Database(":memory:");
@@ -14,5 +15,6 @@ export async function buildApp() {
   const app = new Hono();
   app.route("/health", health);
   app.route("/auth", auth);
+  app.route("/me", me);
   return { app, db };
 }
