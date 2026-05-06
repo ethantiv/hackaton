@@ -1,0 +1,21 @@
+{
+  "name": "field-notebook-backend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun run --hot src/index.ts",
+    "start": "bun run src/index.ts",
+    "test": "bun test",
+    "migrate": "bun run src/db/migrate.ts",
+    "seed": "bun run src/db/seed.ts"
+  },
+  "dependencies": {
+    "hono": "^4.6.0",
+    "argon2": "^0.41.1",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^5.5.0"
+  }
+}
