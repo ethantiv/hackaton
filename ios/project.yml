@@ -4,6 +4,10 @@ options:
   deploymentTarget:
     iOS: "17.0"
   developmentLanguage: pl
+configurations:
+  Debug: debug
+  Debug-Local: debug
+  Release: release
 settings:
   base:
     SWIFT_VERSION: "5.9"
@@ -49,6 +53,12 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: dev.zaniewicz.fieldnotebook
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
+      configs:
+        Debug:
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: ""
+        Debug-Local:
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: "DEBUG_LOCAL"
+        Release: {}
   FieldNotebookTests:
     type: bundle.unit-test
     platform: iOS
