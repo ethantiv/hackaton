@@ -8,7 +8,7 @@ Mobile-only prototype of a field-service workday tool for building-maintenance t
 
 `PRODUCT.md` is the strategic spec (users, voice, anti-references, accessibility) and `DESIGN.md` is the visual system spec ("The Steel Field Notebook"). Both are load-bearing — visual or UX changes must be checked against them, especially the explicit anti-references (no corporate ERP, no Uber-Driver, no SaaS-dashboard, no glassmorphism, no uppercase labels, signal-blue accent ≤5% per screen).
 
-The actual Expo app lives in `app/`. The repo root `public/` is a deploy artifact and should not be edited by hand.
+The Expo prototype lives in `app/`. A native SwiftUI port sits in `ios/` (built only on macos-14 CI — see `.github/workflows/ios.yml`; the Linux dev container has no Xcode/xcodegen). The Hono API is in `backend/`. The repo root `public/` is a deploy artifact and should not be edited by hand.
 
 ## Build & Run
 
@@ -41,6 +41,17 @@ For UI changes, verify in the browser (`bun run web`) using the `agent-browser` 
 
 **Native-vs-web styling.** `nativewind` + Tailwind handles class-based styles cross-platform; `global.css` is the web-only entry that applies `html/body/#root` resets. `metro.config.js` wires NativeWind into Metro; `babel.config.js` configures `jsxImportSource: "nativewind"` and the NativeWind babel plugin. Don't edit these unless adding a real new platform integration.
 
+## iOS native port (`ios/`)
+
+- **No local builds.** Linux dev container has no Xcode toolchain. `xcodebuild`/`xcodegen` run only in CI; commit blind and let `.github/workflows/ios.yml` validate.
+- **Icon enum is bounded.** `IconName` cases in `ios/FieldNotebook/Shared/IconView.swift` come from `app/src/components/Icon.tsx` (16 cases). Designs/plans referring to `.sync`/`.warning`/`.camera` map to existing cases at call sites: `.refreshCw`, `.alertTriangle`, `.plus`. Don't add aliases.
+- **Color tokens use qualified form.** Always `Color.muted` / `Color.statusUrgent` etc. — leading-dot shorthand `.muted` fails type inference in `.foregroundStyle()` / `.background()` modifiers.
+- **Encodable existential.** Use `(any Encodable)?` everywhere (Swift 5.9 strict). Bare `Encodable?` is a compiler error.
+- **AppIcon is mandatory.** `Assets.xcassets/AppIcon.appiconset/` must contain ≥1 PNG entry; iOS 17 actool fails the build otherwise. `ASSETCATALOG_COMPILER_APPICON_NAME=""` does NOT suppress the requirement.
+- **Two icon copies.** `Design/Icons/<name>.svg` is canonical source; `Assets.xcassets/<name>.imageset/<name>.svg` is the build mirror. `project.yml` excludes `Design/Icons/**` from sources so SVGs don't ship as raw resources.
+- **API base URL.** Release builds hit `https://field-notebook.zaniewicz.dev`. Use `Debug-Local` configuration (`#if DEBUG_LOCAL` in `Config.swift`) for `http://localhost:3000`.
+- **CI workflow specifics.** `actions/checkout@v5` (Node 24), `maxim-lobanov/setup-xcode@v1` with `latest-stable` (XcodeGen project format must match Xcode major). First Appetize push bootstraps a slot — workflow prints `publicKey` in the run summary; copy it into the `APPETIZE_PUBLIC_KEY` repo secret to reuse the slot on subsequent pushes.
+
 ## Operational notes
 
 ### Codebase patterns
@@ -57,3 +68,7 @@ For UI changes, verify in the browser (`bun run web`) using the `agent-browser` 
 - Adding decorative animation, gradients, glassmorphism, or pure `#000` / `#fff` — all forbidden by name in `DESIGN.md` §6.
 - Configuring per-user theme/density/font toggles — `DESIGN.md` commits to one right way; the only legitimate settings are font scale, language, dark-mode opt-in.
 - Committing real photo URIs or wiring a backend — this is a prototype; `addPhoto` is intentionally URI-less.
+
+### Multi-session coordination
+
+- The `ios` branch hosts iOS, backend, and the Expo prototype simultaneously. Multiple Claude sessions may commit here in parallel. Always `git add <specific-paths>` (never `git add -A` or `git add .`) and scope each commit to your subdirectory (`ios/`, `backend/`, or `app/`).
