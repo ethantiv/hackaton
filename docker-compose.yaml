@@ -19,9 +19,6 @@ services:
       timeout: 5s
       retries: 3
     restart: unless-stopped
-    labels:
-      - 'traefik.http.services.http-0-eql38a7vbd05at2d0brb7ngz-field-notebook.loadbalancer.server.port=3000'
-      - 'traefik.http.routers.http-0-eql38a7vbd05at2d0brb7ngz-field-notebook.service=http-0-eql38a7vbd05at2d0brb7ngz-field-notebook'
 
 volumes:
   field-notebook-data:
