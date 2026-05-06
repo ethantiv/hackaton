@@ -25,6 +25,14 @@ jobs:
             echo "COOLIFY_API_TOKEN secret not set; relying on Coolify GitHub App auto-deploy."
             exit 0
           fi
-          curl -fsSL -X POST \
+          curl -isS -X POST \
             -H "Authorization: Bearer $TOKEN" \
-            "$COOLIFY_BASE/api/v1/deploy?uuid=$COOLIFY_APP_UUID&force=false"
+            -H "Accept: application/json" \
+            -A "GitHubActions/1.0 (curl)" \
+            "$COOLIFY_BASE/api/v1/deploy?uuid=$COOLIFY_APP_UUID&force=false" \
+            | tee /tmp/resp.txt
+          status=$(head -n 1 /tmp/resp.txt | awk '{print $2}')
+          if [ "$status" != "200" ] && [ "$status" != "201" ]; then
+            echo "::error::Coolify deploy returned HTTP $status"
+            exit 1
+          fi
