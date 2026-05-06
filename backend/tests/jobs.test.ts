@@ -106,3 +106,47 @@ describe("POST /jobs/:id/complete", () => {
     expect(((await res.json()) as { status: string }).status).toBe("done");
   });
 });
+
+describe("GET /jobs/:id", () => {
+  it("returns a job owned by the technician", async () => {
+    const { app, db } = await buildApp();
+    const token = await loginAs(app, "marek@firma.pl");
+    const own = db
+      .query<{ id: string }, [string]>(
+        "SELECT id FROM jobs WHERE technician_id = (SELECT id FROM users WHERE email = ?) LIMIT 1",
+      )
+      .get("marek@firma.pl")!;
+
+    const res = await app.request(`/jobs/${own.id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as { id: string; status: string };
+    expect(body.id).toBe(own.id);
+    expect(["pending", "in_progress", "done"]).toContain(body.status);
+  });
+
+  it("returns 404 for another technician's job", async () => {
+    const { app, db } = await buildApp();
+    const annaJob = db
+      .query<{ id: string }, [string]>(
+        "SELECT id FROM jobs WHERE technician_id = (SELECT id FROM users WHERE email = ?) LIMIT 1",
+      )
+      .get("anna@firma.pl")!;
+    const token = await loginAs(app, "marek@firma.pl");
+
+    const res = await app.request(`/jobs/${annaJob.id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    expect(res.status).toBe(404);
+  });
+
+  it("returns 404 for an unknown id", async () => {
+    const { app } = await buildApp();
+    const token = await loginAs(app, "marek@firma.pl");
+    const res = await app.request(`/jobs/does-not-exist`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    expect(res.status).toBe(404);
+  });
+});
