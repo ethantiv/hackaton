@@ -42,20 +42,47 @@ jobs:
         run: zip -ry FieldNotebook.zip FieldNotebook.app
 
       - name: Upload to Appetize
+        id: appetize
         env:
           APPETIZE_TOKEN: ${{ secrets.APPETIZE_API_TOKEN }}
           APPETIZE_PUBLIC_KEY: ${{ secrets.APPETIZE_PUBLIC_KEY }}
         run: |
-          if [ -z "$APPETIZE_TOKEN" ] || [ -z "$APPETIZE_PUBLIC_KEY" ]; then
-            echo "Appetize secrets missing" >&2
+          set -euo pipefail
+          if [ -z "$APPETIZE_TOKEN" ]; then
+            echo "APPETIZE_API_TOKEN secret missing" >&2
             exit 1
           fi
-          curl -fsSL -X POST \
-            "https://${APPETIZE_TOKEN}@api.appetize.io/v1/apps/${APPETIZE_PUBLIC_KEY}" \
-            -F "file=@ios/build/Build/Products/Release-iphonesimulator/FieldNotebook.zip" \
-            -F "platform=ios"
+          zip_path="ios/build/Build/Products/Release-iphonesimulator/FieldNotebook.zip"
+          if [ -z "$APPETIZE_PUBLIC_KEY" ]; then
+            echo "No APPETIZE_PUBLIC_KEY secret — creating a new Appetize slot."
+            response=$(curl -fsSL -X POST \
+              "https://${APPETIZE_TOKEN}@api.appetize.io/v1/apps" \
+              -F "file=@${zip_path}" \
+              -F "platform=ios")
+            new_key=$(printf '%s' "$response" | jq -r '.publicKey // empty')
+            if [ -z "$new_key" ]; then
+              echo "Failed to extract publicKey from Appetize response: $response" >&2
+              exit 1
+            fi
+            echo "publicKey=$new_key" >> "$GITHUB_OUTPUT"
+            {
+              echo "## First-run bootstrap"
+              echo ""
+              echo "Created a new Appetize slot. Save its publicKey as a repository secret so future runs update this same slot:"
+              echo ""
+              echo '```bash'
+              echo "gh secret set APPETIZE_PUBLIC_KEY -R ${{ github.repository }} -b '$new_key'"
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
+            curl -fsSL -X POST \
+              "https://${APPETIZE_TOKEN}@api.appetize.io/v1/apps/${APPETIZE_PUBLIC_KEY}" \
+              -F "file=@${zip_path}" \
+              -F "platform=ios" >/dev/null
+            echo "publicKey=$APPETIZE_PUBLIC_KEY" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Print stable preview URL
         run: |
-          echo "Tester URL: https://appetize.io/app/${{ secrets.APPETIZE_PUBLIC_KEY }}" \
+          echo "Tester URL: https://appetize.io/app/${{ steps.appetize.outputs.publicKey }}" \
             >> "$GITHUB_STEP_SUMMARY"
