@@ -13,7 +13,7 @@ jobs:
     runs-on: macos-14
     timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Select latest stable Xcode
         uses: maxim-lobanov/setup-xcode@v1
