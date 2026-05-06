@@ -58,12 +58,12 @@ struct LoginView: View {
         do {
             try await store.login(email: email, password: password)
         } catch let e as APIError {
-            error = e
+            self.error = e
             if case .accountLocked(let until) = e { lockedUntil = until }
         } catch let e as KeychainError {
-            error = .underlying("Keychain status \(e.status)")
+            self.error = .underlying("Keychain status \(e.status)")
         } catch {
-            error = .underlying(String(describing: error))
+            self.error = .underlying(String(describing: error))
         }
     }
 
