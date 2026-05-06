@@ -12,7 +12,7 @@ struct NewJobBanner: View {
             }
             Spacer()
             Button("Akceptuj", action: onAccept)
-                .buttonStyle(.borderedProminent).tint(.white)
+                .buttonStyle(.borderedProminent).tint(Color.inkOnSignal)
             Button(action: onDismiss) { IconView(name: .check) }
                 .foregroundStyle(Color.inkOnSignal)
         }
