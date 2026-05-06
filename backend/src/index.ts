@@ -1,10 +1,14 @@
 import { Hono } from "hono";
 import { health } from "./routes/health";
+import { auth } from "./routes/auth";
+import { runMigrations } from "./db/migrate";
+import { config } from "./config";
 
 const app = new Hono();
 app.route("/health", health);
+app.route("/auth", auth);
 
-const port = Number(process.env.PORT ?? 3000);
-console.log(`Backend listening on http://localhost:${port}`);
+runMigrations();
 
-export default { port, fetch: app.fetch };
+console.log(`Backend listening on http://localhost:${config.PORT}`);
+export default { port: config.PORT, fetch: app.fetch };
