@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { getDb } from "../db/client";
 import { LoginBody, RefreshBody } from "../schemas/auth";
-import { verifyPassword } from "../auth/passwords";
+import { verifyPassword, DUMMY_HASH } from "../auth/passwords";
 import { signAccessToken } from "../auth/jwt";
 import {
   isLocked, lockedUntil, recordLoginFailure, resetFailures,
@@ -36,7 +36,7 @@ auth.post("/login", async (c) => {
     return c.json({ error: "account_locked", lockedUntil: lockedUntil(db, user.id) }, 423);
   }
 
-  const ok = user ? await verifyPassword(user.password_hash, parsed.data.password) : false;
+  const ok = await verifyPassword(user?.password_hash ?? DUMMY_HASH, parsed.data.password);
   if (!user || !ok) {
     if (user) recordLoginFailure(db, user.id);
     return c.json({ error: "invalid_credentials" }, 401);

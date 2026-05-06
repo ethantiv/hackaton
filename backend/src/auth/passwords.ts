@@ -13,3 +13,10 @@ export async function verifyPassword(hash: string, plain: string): Promise<boole
     return false;
   }
 }
+
+// Precomputed argon2id hash of a constant the application will never accept as
+// a password. Used to equalize verification time on the unknown-user branch of
+// /auth/login so request timing does not reveal whether an e-mail is registered.
+export const DUMMY_HASH: string = await hashPassword(
+  "__field-notebook-dummy-hash-do-not-use__",
+);
