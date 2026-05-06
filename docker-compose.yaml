@@ -1,5 +1,5 @@
 services:
-  field-notebook:
+  notebook:
     build:
       context: ./backend
       dockerfile: Dockerfile
