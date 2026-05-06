@@ -58,7 +58,7 @@ describe("POST /auth/refresh", () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: "marek@firma.pl", password: "test1234" }),
     });
-    const { refreshToken } = await login.json();
+    const { refreshToken } = (await login.json()) as { refreshToken: string };
 
     const r1 = await app.request("/auth/refresh", {
       method: "POST",
@@ -66,7 +66,7 @@ describe("POST /auth/refresh", () => {
       body: JSON.stringify({ refreshToken }),
     });
     expect(r1.status).toBe(200);
-    const out = await r1.json();
+    const out = (await r1.json()) as { accessToken: string; refreshToken: string };
     expect(out.accessToken.length).toBeGreaterThan(0);
     expect(out.refreshToken).not.toBe(refreshToken);
 
@@ -88,7 +88,7 @@ describe("POST /auth/logout", () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: "marek@firma.pl", password: "test1234" }),
     });
-    const { accessToken, refreshToken } = await login.json();
+    const { accessToken, refreshToken } = (await login.json()) as { accessToken: string; refreshToken: string };
 
     const out = await app.request("/auth/logout", {
       method: "POST",

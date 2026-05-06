@@ -6,6 +6,12 @@ import { runMigrations } from "./migrate";
 
 const PASSWORD = "test1234";
 
+type JobInput = Omit<
+  JobSeed,
+  "id" | "technician_id" | "created_at" | "updated_at" | "is_new" | "unit" | "contact_name" | "contact_phone" | "travel_time_min"
+> &
+  Partial<Pick<JobSeed, "is_new" | "unit" | "contact_name" | "contact_phone" | "travel_time_min">>;
+
 type Tech = {
   email: string;
   display_name: string;
@@ -224,13 +230,15 @@ function addMin(hhmm: string, min: number): string {
   return `${String(Math.floor(total / 60)).padStart(2, "0")}:${String(total % 60).padStart(2, "0")}`;
 }
 
-type JobInput = Omit<JobSeed, "id" | "technician_id" | "created_at" | "updated_at" | "is_new"> &
-  Partial<Pick<JobSeed, "is_new">>;
 function j(input: JobInput) {
-  return { ...input, is_new: (input.is_new ?? 0) as 0 | 1 } as Omit<
-    JobSeed,
-    "technician_id" | "id" | "created_at" | "updated_at"
-  >;
+  return {
+    ...input,
+    unit: input.unit ?? null,
+    contact_name: input.contact_name ?? null,
+    contact_phone: input.contact_phone ?? null,
+    travel_time_min: input.travel_time_min ?? null,
+    is_new: (input.is_new ?? 0) as 0 | 1,
+  } as Omit<JobSeed, "technician_id" | "id" | "created_at" | "updated_at">;
 }
 
 if (import.meta.main) {

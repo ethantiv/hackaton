@@ -18,7 +18,7 @@ describe("GET /me", () => {
       headers: { Authorization: `Bearer ${token}` },
     });
     expect(res.status).toBe(200);
-    const body = await res.json();
+    const body = (await res.json()) as { email: string; displayName: string; specialization: string };
     expect(body.email).toBe("marek@firma.pl");
     expect(body.displayName).toBe("Marek Kowalski");
     expect(body.specialization).toBe("elektryk");

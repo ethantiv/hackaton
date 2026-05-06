@@ -17,7 +17,7 @@ describe("GET /jobs", () => {
     const token = await loginAs(app, "marek@firma.pl");
     const res = await app.request("/jobs", { headers: { Authorization: `Bearer ${token}` } });
     expect(res.status).toBe(200);
-    const jobs = await res.json();
+    const jobs = (await res.json()) as Array<{ id: string }>;
     expect(jobs.length).toBe(8);
     expect(new Set(jobs.map((j: any) => j.id)).size).toBe(8);
   });
@@ -26,10 +26,10 @@ describe("GET /jobs", () => {
     const { app } = await buildApp();
     const t1 = await loginAs(app, "anna@firma.pl");
     const r1 = await app.request("/jobs", { headers: { Authorization: `Bearer ${t1}` } });
-    const annaJobs = await r1.json();
+    const annaJobs = (await r1.json()) as Array<{ id: string }>;
     const t2 = await loginAs(app, "marek@firma.pl");
     const r2 = await app.request("/jobs", { headers: { Authorization: `Bearer ${t2}` } });
-    const marekJobs = await r2.json();
+    const marekJobs = (await r2.json()) as Array<{ id: string }>;
     const annaIds = new Set(annaJobs.map((j: any) => j.id));
     expect(marekJobs.every((j: any) => !annaIds.has(j.id))).toBe(true);
   });
@@ -50,7 +50,7 @@ describe("POST /jobs/:id/start", () => {
       headers: { Authorization: `Bearer ${token}` },
     });
     expect(res.status).toBe(200);
-    const body = await res.json();
+    const body = (await res.json()) as { status: string };
     expect(body.status).toBe("in_progress");
   });
 
@@ -103,6 +103,6 @@ describe("POST /jobs/:id/complete", () => {
       headers: { Authorization: `Bearer ${token}` },
     });
     expect(res.status).toBe(200);
-    expect((await res.json()).status).toBe("done");
+    expect(((await res.json()) as { status: string }).status).toBe("done");
   });
 });

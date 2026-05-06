@@ -1,4 +1,5 @@
 import { describe, it, expect } from "bun:test";
+import type { Database } from "bun:sqlite";
 import { buildApp } from "./helpers/testApp";
 
 const JPEG_MAGIC = new Uint8Array([0xff, 0xd8, 0xff, 0xe0, ...new Array(64).fill(0x00)]);
@@ -13,13 +14,13 @@ async function loginAs(app: any, email: string) {
   return (await r.json()).accessToken as string;
 }
 
-async function getOwnJobId(app: any, db: any, email: string): Promise<string> {
+async function getOwnJobId(app: any, db: Database, email: string): Promise<string> {
   const row = db
     .query<{ id: string }, [string]>(
       "SELECT id FROM jobs WHERE technician_id = (SELECT id FROM users WHERE email = ?) LIMIT 1",
     )
     .get(email);
-  return row.id;
+  return row!.id;
 }
 
 describe("POST /jobs/:id/photos", () => {
@@ -38,7 +39,7 @@ describe("POST /jobs/:id/photos", () => {
       body: form,
     });
     expect(res.status).toBe(201);
-    const body = await res.json();
+    const body = (await res.json()) as { mimeType: string; description: string };
     expect(body.mimeType).toBe("image/jpeg");
     expect(body.description).toBe("Test");
   });
