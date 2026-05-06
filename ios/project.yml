@@ -16,6 +16,7 @@ settings:
     SUPPORTED_PLATFORMS: "iphonesimulator iphoneos"
     TARGETED_DEVICE_FAMILY: "1"
     ENABLE_USER_SCRIPT_SANDBOXING: NO
+    ASSETCATALOG_COMPILER_APPICON_NAME: ""
 targets:
   FieldNotebook:
     type: application
@@ -23,6 +24,8 @@ targets:
     deploymentTarget: "17.0"
     sources:
       - path: FieldNotebook
+        excludes:
+          - "Design/Icons/**"
     resources:
       - path: FieldNotebook/Resources/Assets.xcassets
       - path: FieldNotebook/Resources/Fonts
