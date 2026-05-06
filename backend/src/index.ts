@@ -4,10 +4,18 @@ import { auth } from "./routes/auth";
 import { me } from "./routes/me";
 import { jobs } from "./routes/jobs";
 import { jobPhotos, photoFiles } from "./routes/photos";
+import { secureHeaders } from "./middleware/secureHeaders";
+import { loginRateLimit } from "./middleware/rateLimit";
+import { errorHandler } from "./middleware/errorHandler";
 import { runMigrations } from "./db/migrate";
 import { config } from "./config";
 
 const app = new Hono();
+app.use("*", secureHeaders());
+app.onError(errorHandler);
+
+app.use("/auth/login", loginRateLimit({ max: 10, windowMs: 15 * 60_000 }));
+
 app.route("/health", health);
 app.route("/auth", auth);
 app.route("/me", me);
