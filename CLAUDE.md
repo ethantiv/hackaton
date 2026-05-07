@@ -12,16 +12,30 @@ The Expo prototype lives in `app/`. A native SwiftUI port sits in `ios/` (built 
 
 ## Build & Run
 
-Package manager is **bun** (`bun.lock` is the source of truth — do not introduce `package-lock.json` / `yarn.lock`). Run all commands from `app/`:
+Package manager is **bun** (`bun.lock` is the source of truth — do not introduce `package-lock.json` / `yarn.lock`).
+
+From `app/` (Expo prototype):
 
 - Install: `bun install`
 - Dev (Metro + QR): `bun start`
 - Web: `bun run web`
 - iOS sim / Android emu: `bun run ios` / `bun run android`
 
+From `backend/` (Hono + SQLite API):
+
+- Install: `bun install`
+- Migrate schema: `bun run migrate` (creates `backend/data/app.db`)
+- Seed test accounts: `bun run seed`
+- Dev server: `bun run dev` (http://localhost:3000, hot reload)
+- Tests: `bun test` (runs against in-memory SQLite, doesn't touch `data/`)
+
+Production backend runs on Coolify on the RPi at `https://backend.mirek-rpi.org` via `backend/docker-compose.yml`. Seeded test accounts live in `backend/README.md`.
+
 ## Validation
 
-There are no test, lint, or dedicated typecheck scripts wired up. TypeScript is in strict mode — typecheck via `bun x tsc --noEmit` from `app/`.
+`app/` has no test, lint, or dedicated typecheck script — TypeScript is strict, typecheck via `bun x tsc --noEmit` from `app/`.
+
+`backend/` has `bun test` (full suite under `backend/tests/`) plus strict TypeScript typecheck via `bun x tsc --noEmit` from `backend/`. Run both after changes that touch routes, schemas, or auth.
 
 For UI changes, verify in the browser (`bun run web`) using the `agent-browser` skill. The `DemoToggle` segmented control at the top of `TodayScreen` switches between `default | offline | new | empty` demo states — exercise all four when changing list/spotlight/empty-state behavior.
 
@@ -56,7 +70,7 @@ For UI changes, verify in the browser (`bun run web`) using the `agent-browser` 
 
 ### Codebase patterns
 
-- **Components are presentational and read state via `useAppState()`** rather than receiving navigation/state props. New screens follow the `TodayScreen` / `JobDetailScreen` / `CaptureScreen` shape: `SafeAreaView` (top edge only) + `ScrollView` body + a sticky `BottomCTA` outside the scroll view, with `useSafeAreaInsets()` to pad above the home indicator.
+- **Components are presentational and read state via `useAppState()`** rather than receiving navigation/state props. New screens follow the `TodayScreen` / `JobDetailScreen` / `CaptureScreen` shape: `SafeAreaView` (top edge only) + `ScrollView` body + a sticky `BottomCTA` outside the scroll view, with `useSafeAreaInsets()` to pad above the home indicator. `TodayScreen` additionally renders `SpotlightCard` (today's primary job) above a `DoneAccordion` ("Reszta dnia") for completed/queued jobs — keep that ordering when adjusting layout.
 - **CTA placement is a hard rule from PRODUCT.md.** Primary actions live in `BottomCTA` (bottom 60% of the screen, ≥64 pt height). Top bars carry title + sync status only — never destructive or primary actions.
 - **Status is always color + icon + label**, never color alone. `StatusBadge` and `StatusDot` enforce this; reuse them instead of styling new badges.
 - **Polish copy is the primary language.** All user-facing strings are in Polish (see existing screens for tone — direct, operational, no encouragement copy, no gamification). Sentence case for every label and chip — uppercase is forbidden by `DESIGN.md`.
@@ -71,4 +85,4 @@ For UI changes, verify in the browser (`bun run web`) using the `agent-browser` 
 
 ### Multi-session coordination
 
-- The `ios` branch hosts iOS, backend, and the Expo prototype simultaneously. Multiple Claude sessions may commit here in parallel. Always `git add <specific-paths>` (never `git add -A` or `git add .`) and scope each commit to your subdirectory (`ios/`, `backend/`, or `app/`).
+- `main` hosts iOS, backend, and the Expo prototype simultaneously. Multiple Claude sessions may commit here in parallel. Always `git add <specific-paths>` (never `git add -A` or `git add .`) and scope each commit to your subdirectory (`ios/`, `backend/`, or `app/`).
