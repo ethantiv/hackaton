@@ -50,7 +50,7 @@ For UI changes, verify in the browser (`bun run web`) using the `agent-browser` 
 - **AppIcon is mandatory.** `Assets.xcassets/AppIcon.appiconset/` must contain ≥1 PNG entry; iOS 17 actool fails the build otherwise. `ASSETCATALOG_COMPILER_APPICON_NAME=""` does NOT suppress the requirement.
 - **Two icon copies.** `Design/Icons/<name>.svg` is canonical source; `Assets.xcassets/<name>.imageset/<name>.svg` is the build mirror. `project.yml` excludes `Design/Icons/**` from sources so SVGs don't ship as raw resources.
 - **API base URL.** Release builds hit `https://backend.mirek-rpi.org` (Coolify on the RPi, app uuid `k3740dkxfg4otahb6rn6hvw2`). Use `Debug-Local` configuration (`#if DEBUG_LOCAL` in `Config.swift`) for `http://localhost:3000`.
-- **CI workflow specifics.** `actions/checkout@v5` (Node 24), `maxim-lobanov/setup-xcode@v1` with `latest-stable` (XcodeGen project format must match Xcode major). First Appetize push bootstraps a slot — workflow prints `publicKey` in the run summary; copy it into the `APPETIZE_PUBLIC_KEY` repo secret to reuse the slot on subsequent pushes.
+- **CI workflow specifics.** `actions/checkout@v5` (Node 24), `maxim-lobanov/setup-xcode@v1` with `latest-stable` (XcodeGen project format must match Xcode major). First Appetize push bootstraps a slot — workflow prints `publicKey` in the run summary; copy it into the `APPETIZE_PUBLIC_KEY` repo secret to reuse the slot on subsequent pushes. Display name is `iOS Build & Deploy`, file is `ios.yml` — query runs with `gh run list --workflow=ios.yml` (the bare name `iOS` doesn't match).
 
 ## Operational notes
 
