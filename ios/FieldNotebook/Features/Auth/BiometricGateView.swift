@@ -47,7 +47,7 @@ struct BiometricGateView<Content: View>: View {
         let r = await auth.authenticate()
         switch r {
         case .success: unlocked = true
-        case .unavailable: biometricUnavailable = true; unlocked = true // Appetize fallback: pass through
+        case .unavailable: biometricUnavailable = true; unlocked = true // Simulator fallback: pass through
         case .failed, .userCancelled: break
         }
     }
