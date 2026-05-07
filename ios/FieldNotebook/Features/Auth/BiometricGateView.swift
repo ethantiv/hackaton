@@ -2,6 +2,7 @@ import SwiftUI
 
 struct BiometricGateView<Content: View>: View {
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(AppStore.self) private var store
     @State private var unlocked = false
     @State private var biometricUnavailable = false
     @State private var auth = BiometricAuth()
@@ -31,8 +32,8 @@ struct BiometricGateView<Content: View>: View {
             IconView(name: .check, size: 48).foregroundStyle(Color.signal)
             Text("Field Notebook").font(.headline)
             if biometricUnavailable {
-                Text("Wpisz hasło, żeby kontynuować.").font(.bodyText).foregroundStyle(Color.muted)
-                Button("Zaloguj hasłem") { /* TODO: re-auth fallback */ }
+                Text("Zaloguj się hasłem aplikacji, żeby kontynuować.").font(.bodyText).foregroundStyle(Color.muted)
+                Button("Zaloguj hasłem") { Task { await store.logout() } }
                     .buttonStyle(.borderedProminent)
             } else {
                 Button("Odblokuj") { Task { await tryUnlock() } }
@@ -47,7 +48,11 @@ struct BiometricGateView<Content: View>: View {
         let r = await auth.authenticate()
         switch r {
         case .success: unlocked = true
-        case .unavailable: biometricUnavailable = true; unlocked = true // Simulator fallback: pass through
+        case .unavailable:
+            biometricUnavailable = true
+            #if targetEnvironment(simulator)
+            unlocked = true
+            #endif
         case .failed, .userCancelled: break
         }
     }

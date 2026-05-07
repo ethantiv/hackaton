@@ -16,13 +16,13 @@ final class BiometricAuth {
         ctx.localizedFallbackTitle = "Wpisz hasło"
 
         var err: NSError?
-        guard ctx.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &err) else {
+        guard ctx.canEvaluatePolicy(.deviceOwnerAuthentication, error: &err) else {
             lastResult = .unavailable
             return .unavailable
         }
         do {
             let ok = try await ctx.evaluatePolicy(
-                .deviceOwnerAuthenticationWithBiometrics,
+                .deviceOwnerAuthentication,
                 localizedReason: "Odblokuj aplikację, żeby zobaczyć dzisiejsze zlecenia")
             let result: BiometricResult = ok ? .success : .failed
             lastResult = result
