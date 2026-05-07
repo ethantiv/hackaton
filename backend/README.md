@@ -47,4 +47,6 @@ Wymagane zmienne środowiskowe w panelu Coolify:
 
 ## Wdrożenia
 
-Redeploy uruchamiaj ręcznie z panelu Coolify (projekt `mirek-rpi` → `field-notebook-backend` → Deploy). Aplikacja GitHub Coolify jest zainstalowana, ale automatyczne wdrażanie wyzwalane pushem jest obecnie wyłączone; żaden workflow GitHub Actions nie bierze udziału we wdrożeniu.
+Coolify auto-deployuje backend po każdym pushu do `main` przez zainstalowaną GitHub Appkę (`good-goosander-k808g8tu5eujk4v6`). Ręczny redeploy z panelu Coolify (projekt `mirek-rpi` → `field-notebook-backend` → Deploy) dalej działa jako fallback. Żaden workflow GitHub Actions nie bierze udziału we wdrożeniu.
+
+**Wymóg konfiguracyjny.** Wszystkie 4 URL-e w GitHub Appce (Homepage, Callback, Setup, Webhook) muszą być po `https://`. Coolify domyślnie generuje je po `http://` z powodu zmiennej `APP_URL` ustawionej na `http://coolify.mirek-rpi.org`, a panel wymusza redirect 301 na HTTPS. GitHub webhook delivery nie podąża za redirectami — przy każdej regeneracji URL-i w Appce trzeba ręcznie zmienić `http://` na `https://`, inaczej deploy przestanie się uruchamiać.
