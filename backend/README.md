@@ -31,7 +31,7 @@ Testy działają na bazie SQLite w pamięci — nie modyfikują katalogu `./data
 
 ## Wdrożenie
 
-Coolify na RPi konsumuje `docker-compose.yml`. Wolumin `field-notebook-data` zachowuje `app.db` i przesłane zdjęcia między kolejnymi wdrożeniami.
+Coolify na RPi konsumuje `docker-compose.yaml`. Wolumin `field-notebook-data` zachowuje `app.db` i przesłane zdjęcia między kolejnymi wdrożeniami.
 
 Wymagane zmienne środowiskowe w panelu Coolify:
 - `JWT_SECRET` — co najmniej 32 znaki, ustawiany JEDNOKROTNIE przy wdrożeniu i nie rotowany bez wymuszonego globalnego wylogowania użytkowników.

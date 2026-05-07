@@ -1,7 +1,7 @@
 services:
   notebook:
     build:
-      context: ./backend
+      context: .
       dockerfile: Dockerfile
     image: 'field-notebook-backend:latest'
     expose:

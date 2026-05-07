@@ -29,7 +29,7 @@ From `backend/` (Hono + SQLite API):
 - Dev server: `bun run dev` (http://localhost:3000, hot reload)
 - Tests: `bun test` (runs against in-memory SQLite, doesn't touch `data/`)
 
-Production backend runs on Coolify on the RPi at `https://backend.mirek-rpi.org` via `backend/docker-compose.yml`; every push to `main` auto-deploys it via the Coolify GitHub App (no watch-paths filter, so `ios/` and `app/` commits also trigger a backend redeploy and a brief 404 window). Seeded test accounts live in `backend/README.md`.
+Production backend runs on Coolify on the RPi at `https://backend.mirek-rpi.org` via `backend/docker-compose.yaml`; every push to `main` auto-deploys it via the Coolify GitHub App (no watch-paths filter, so `ios/` and `app/` commits also trigger a backend redeploy and a brief 404 window). Seeded test accounts live in `backend/README.md`.
 
 ## Validation
 
