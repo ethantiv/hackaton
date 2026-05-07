@@ -8,7 +8,7 @@ Mobile-only prototype of a field-service workday tool for building-maintenance t
 
 `PRODUCT.md` is the strategic spec (users, voice, anti-references, accessibility) and `DESIGN.md` is the visual system spec ("The Steel Field Notebook"). Both are load-bearing — visual or UX changes must be checked against them, especially the explicit anti-references (no corporate ERP, no Uber-Driver, no SaaS-dashboard, no glassmorphism, no uppercase labels, signal-blue accent ≤5% per screen).
 
-The Expo prototype lives in `app/`. A native SwiftUI port sits in `ios/` (built only on macos-14 CI — see `.github/workflows/ios.yml`; the Linux dev container has no Xcode/xcodegen). The Hono API is in `backend/`. The repo root `public/` is a deploy artifact and should not be edited by hand.
+The Expo prototype lives in `app/`. A native SwiftUI port sits in `ios/` (built only on macos-14 CI — see `.github/workflows/ios.yml`; the Linux dev container has no Xcode/xcodegen). The Hono API is in `backend/`.
 
 ## Build & Run
 
