@@ -40,6 +40,6 @@ The default `Release` configuration points at the production backend (`https://b
    ```
 3. ⌘R in Xcode again — the simulator now talks to your laptop instead of the RPi.
 
-### Why bother with the local sim instead of Appetize?
+### CI artifact
 
-You get the full Xcode debugger (breakpoints, the Variables panel on a `catch`, the Console with `print()`/framework messages, the Network inspector) — much faster diagnosis than waiting for an Appetize build to upload after every change.
+`.github/workflows/ios.yml` builds the iOS Simulator `.app` and publishes it as the `FieldNotebook-simulator` GitHub Actions artifact (14-day retention). Download and install instructions live in `ios/README.md` → **CI**.
