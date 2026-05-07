@@ -24,20 +24,32 @@ xcodebuild test \
 
 ## CI
 
-`.github/workflows/ios.yml` builds the simulator `.app` on every push to `main` or `ios` and uploads it to a fixed Appetize.io slot.
+`.github/workflows/ios.yml` builds the iOS Simulator `.app` on every push to `main` or `ios` (and via `workflow_dispatch`) and publishes it as a GitHub Actions artifact named `FieldNotebook-simulator` (14-day retention). No external services, no secrets required.
 
-Required GitHub repository secrets:
+### Download and run the artifact on macOS
 
-| Secret | Source |
-|---|---|
-| `APPETIZE_API_TOKEN` | Appetize dashboard → Account → API Token |
-| `APPETIZE_PUBLIC_KEY` | Appetize dashboard → App → publicKey |
+Requires Xcode installed (the bundled iOS Simulator is enough for `xcrun simctl`).
 
-The stable tester URL is `https://appetize.io/app/<APPETIZE_PUBLIC_KEY>` and is printed in each CI job's Summary.
+```bash
+# 1. Fetch the latest artifact (or pass --run <id> for a specific run).
+gh run download -R <owner>/<repo> -n FieldNotebook-simulator -D /tmp/fn
+unzip /tmp/fn/FieldNotebook.zip -d /tmp/fn
 
-## Smoke checklist (after every Appetize upload)
+# 2. Pick any installed simulator and boot it.
+xcrun simctl list devices available | grep iPhone
+xcrun simctl boot "iPhone 15"        # name from the list above
+open -a Simulator
 
-- [ ] Open Appetize URL in a desktop browser, simulator boots
+# 3. Install and launch the .app by bundle id.
+xcrun simctl install booted /tmp/fn/FieldNotebook.app
+xcrun simctl launch booted dev.zaniewicz.fieldnotebook
+```
+
+The default `Release` configuration points at the production backend (`https://backend.mirek-rpi.org`). Test accounts are listed in `backend/README.md`.
+
+## Smoke checklist (after installing the artifact)
+
+- [ ] `xcrun simctl install booted` exits cleanly, app icon appears in the Simulator
 - [ ] Login as `marek@firma.pl` / `test1234` → today list shows 8 jobs (3 done, 5 pending)
 - [ ] Tap a pending job → Detail → Start → Capture → pick photo from simulator's photo library → Finish
 - [ ] Logout → Login as `kasia@firma.pl` → empty state visible
