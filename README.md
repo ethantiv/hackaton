@@ -40,6 +40,25 @@ Domyślna konfiguracja `Release` celuje w produkcyjny backend (`https://backend.
    ```
 3. Ponownie ⌘R w Xcode — simulator komunikuje się teraz z laptopem zamiast z RPi.
 
-### Artefakt CI
+### Uruchomienie artefaktu CI na macOS
 
-`.github/workflows/ios.yml` buduje `.app` dla iOS Simulatora i publikuje go jako artefakt GitHub Actions o nazwie `FieldNotebook-simulator` (retencja 14 dni). Instrukcja pobrania i instalacji znajduje się w `ios/README.md` → sekcja **CI**.
+`.github/workflows/ios.yml` buduje `.app` dla iOS Simulatora przy każdym pushu na `main` lub `ios` (oraz ręcznie z `workflow_dispatch`) i publikuje go jako artefakt GitHub Actions o nazwie `FieldNotebook-simulator` (retencja 14 dni). Bez zewnętrznych usług, bez sekretów.
+
+Wymagany zainstalowany Xcode (sam Simulator z Xcode wystarczy, żeby `xcrun simctl` działał).
+
+```bash
+# 1. Pobierz najnowszy artefakt (albo wskaż konkretny run przez --run <id>).
+gh run download -R <owner>/<repo> -n FieldNotebook-simulator -D /tmp/fn
+unzip /tmp/fn/FieldNotebook.zip -d /tmp/fn
+
+# 2. Wybierz dowolny zainstalowany simulator i go wystartuj.
+xcrun simctl list devices available | grep iPhone
+xcrun simctl boot "iPhone 15"        # nazwa z listy powyżej
+open -a Simulator
+
+# 3. Zainstaluj i uruchom .app po bundle id.
+xcrun simctl install booted /tmp/fn/FieldNotebook.app
+xcrun simctl launch booted dev.zaniewicz.fieldnotebook
+```
+
+Aplikacja celuje w produkcyjny backend (`https://backend.mirek-rpi.org`); konta testowe w `backend/README.md`.
